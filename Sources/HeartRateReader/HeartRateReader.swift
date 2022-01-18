@@ -88,6 +88,7 @@ public class HeartRateReader: NSObject, ObservableObject {
 	var heartRate: Float? {
 		guard let average = self.rates.getAverage() else { return nil }
 		let pulse = 60.0/average
+		print("pulse: \(pulse)")
 		return pulse
 	}
 }

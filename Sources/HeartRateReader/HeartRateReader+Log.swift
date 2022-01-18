@@ -42,69 +42,73 @@ extension HeartRateReader {
 		
 		func addNewValue(newVal: Double, atTime time: Double) -> Float {
 			if newVal > 0 {
-				upVals[upValIndex] = newVal
-				upValIndex += 1
-				if upValIndex >= averageSize {
-					upValIndex = 0
-				}
-			}
-			
-			if newVal < 0 {
-				downVals[downValIndex] = -newVal
-				downValIndex += 1
-				if downValIndex >= averageSize {
-					downValIndex = 0
-				}
-			}
-			
-			// work out the average value above zero
-			var count: Double = 0
-			var total: Double = 0
-			for i in 0..<averageSize {
-				if upVals[i] != invalidEntry {
-					count += 1
-					total += upVals[i]
-				}
-			}
-			
-			let averageUp: Double = total/count
-			// and the average value below zero
-			count = 0
-			total = 0
-			for i in 0..<averageSize {
-				if downVals[i] != invalidEntry {
-					count += 1
-					total += downVals[i]
-				}
-			}
-			let averageDown: Double = total/count
-			
-			if newVal < -0.5 * averageDown {
-				wasDown = true
-			}
-			// is the new value an up value and were we previously in the down state?
-			if newVal >= 0.5 * averageUp && wasDown {
-				wasDown = false
-				// work out the difference between now and the last time this happenned
-				if time - periodStart < maxPeriod && time - periodStart > minPeriod {
-					periods[periodIndex] = time - periodStart
-					periodTimes[periodIndex] = time
-					periodIndex += 1
-					if periodIndex >= maxPeriodsToStore {
-						periodIndex = 0
-					}
-				}
-				// track when the transition happened
-				periodStart = time
-			}
-			// return up or down
-			if newVal < -0.5 * averageDown {
-				return -1
-			} else if newVal > 0.5 * averageUp {
-				return 1
-			}
-			return 0
+		 upVals[upValIndex] = newVal
+		 upValIndex += 1
+		 if upValIndex >= averageSize {
+			  upValIndex = 0
+		 }
+	}
+	
+	if newVal < 0 {
+		 downVals[downValIndex] = -newVal
+		 downValIndex += 1
+		 if downValIndex >= averageSize {
+			  downValIndex = 0
+		 }
+	}
+	
+	// work out the average value above zero
+	var count: Double = 0
+	var total: Double = 0
+	for i in 0..<averageSize {
+		 if upVals[i] != invalidEntry {
+			  count += 1
+			  total += upVals[i]
+		 }
+	}
+	
+	let averageUp: Double = total/count
+	// and the average value below zero
+	count = 0
+	total = 0
+	for i in 0..<averageSize {
+		 if downVals[i] != invalidEntry {
+			  count += 1
+			  total += downVals[i]
+		 }
+	}
+	let averageDown: Double = total/count
+	
+	if newVal < -0.5 * averageDown {
+		if !wasDown {
+			NSLog("Pulse")
+			DispatchQueue.main.async { self.publisher.send() }
 		}
+		 wasDown = true
+	}
+	// is the new value an up value and were we previously in the down state?
+	if newVal >= 0.5 * averageUp && wasDown {
+		 wasDown = false
+		 // work out the difference between now and the last time this happenned
+		 if time - periodStart < maxPeriod && time - periodStart > minPeriod {
+			  periods[periodIndex] = time - periodStart
+			  periodTimes[periodIndex] = time
+			  periodIndex += 1
+			  if periodIndex >= maxPeriodsToStore {
+					periodIndex = 0
+			  }
+		 }
+		 // track when the transition happened
+		 periodStart = time
+	}
+	// return up or down
+	if newVal < -0.5 * averageDown {
+		 return -1
+	} else if newVal > 0.5 * averageUp {
+		 return 1
+	}
+	return 0
+}
 		
 		func getAverage() -> Float? {
 			let time = CACurrentMediaTime()

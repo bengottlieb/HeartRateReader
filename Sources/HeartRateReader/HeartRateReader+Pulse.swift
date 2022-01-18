@@ -48,14 +48,14 @@ extension HeartRateReader {
 		}
 		
 		let hsv = rgb2hsv((red: redmean, green: greenmean, blue: bluemean, alpha: 1.0))
-		if (hsv.1 > 0.5 && hsv.2 > 0.5) {			// is the lens covered?
+		if (hsv.saturation > 0.5 && hsv.brightness > 0.5) {			// is the lens covered?
 			if !isMeasuring { DispatchQueue.main.async { self.isMeasuring = true } }
 			validFrameCounter += 1
-			if validFrameCounter > 60 {
-				let filtered = hueFilter.processValue(value: Double(hsv.0))
+//			if validFrameCounter > 60 {
+				let newValue = Double(hsv.hue)
+				let filtered = hueFilter.processValue(value: newValue)
 				_ = rates.addNewValue(newVal: filtered, atTime: CACurrentMediaTime())
-				DispatchQueue.main.async { self.objectWillChange.send() }
-			}
+//			}
 		} else {
 			if isMeasuring { DispatchQueue.main.async { self.isMeasuring = false } }
 			validFrameCounter = 0

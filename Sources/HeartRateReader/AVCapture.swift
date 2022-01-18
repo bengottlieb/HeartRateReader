@@ -55,7 +55,7 @@ extension AVCaptureDevice {
 }
 
 extension AVCaptureDevice.Position {
-	func device(using priorities: [AVCaptureDevice.DeviceType] = [ .builtInUltraWideCamera, .builtInWideAngleCamera, .builtInTelephotoCamera ]) -> AVCaptureDevice? {
+	func device(using priorities: [AVCaptureDevice.DeviceType] = [ .builtInWideAngleCamera, .builtInUltraWideCamera, .builtInTelephotoCamera ]) -> AVCaptureDevice? {
 		let devices = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTelephotoCamera, .builtInUltraWideCamera, .builtInWideAngleCamera], mediaType: AVMediaType.video, position: self).devices.filter { $0.position == self }
 		
 		for type in priorities {
