@@ -40,6 +40,9 @@ struct ContentView: View {
 				 .padding()
 			 }
 		 }
+		 .onAppear {
+			 try? reader.start()
+		 }
 	 }
 }
 
