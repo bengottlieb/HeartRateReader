@@ -41,7 +41,7 @@ struct ContentView: View {
 			 }
 		 }
 		 .onAppear {
-			 try? reader.start()
+				try? reader.start()
 		 }
 	 }
 }

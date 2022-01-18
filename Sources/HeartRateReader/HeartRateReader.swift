@@ -61,7 +61,13 @@ public class HeartRateReader: NSObject, ObservableObject {
 		}
 
 		captureSession.startRunning()
-		DispatchQueue.main.async { self.isRunning = true }
+		DispatchQueue.main.async {
+			self.isRunning = true
+			DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+				AVCaptureDevice.default(for: .video)?.toggleTorch(on: true)
+			}
+//			self.videoDevice?.toggleTorch(on: true)
+		}
 	}
 	
 	public var canReset: Bool { videoConnection != nil }
@@ -81,6 +87,7 @@ public class HeartRateReader: NSObject, ObservableObject {
 	}
 	
 	public func stop() {
+		AVCaptureDevice.default(for: .video)?.toggleTorch(on: true)
 		captureSession.stopRunning()
 		DispatchQueue.main.async { self.isRunning = false }
 	}
@@ -88,7 +95,6 @@ public class HeartRateReader: NSObject, ObservableObject {
 	var heartRate: Float? {
 		guard let average = self.rates.getAverage() else { return nil }
 		let pulse = 60.0/average
-		print("pulse: \(pulse)")
 		return pulse
 	}
 }

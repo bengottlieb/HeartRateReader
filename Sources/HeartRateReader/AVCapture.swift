@@ -52,11 +52,30 @@ extension AVCaptureDevice {
 			unlockForConfiguration()
 		}
 	}
+	
+	func toggleTorch(on: Bool) {
+		print("Turning torch on: \(on)")
+		 guard hasTorch, isTorchAvailable else {
+			  print("Torch is not available")
+			  return
+		 }
+		 do {
+			  try lockForConfiguration()
+			  torchMode = on ? .on : .off
+			  unlockForConfiguration()
+		 } catch {
+			  print("Torch could not be used \(error)")
+		 }
+	}
+}
+
+extension AVCaptureDevice.DeviceType {
+	static let allTypes: [AVCaptureDevice.DeviceType] = [.builtInTelephotoCamera, .builtInWideAngleCamera, .builtInUltraWideCamera]
 }
 
 extension AVCaptureDevice.Position {
-	func device(using priorities: [AVCaptureDevice.DeviceType] = [ .builtInWideAngleCamera, .builtInUltraWideCamera, .builtInTelephotoCamera ]) -> AVCaptureDevice? {
-		let devices = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInTelephotoCamera, .builtInUltraWideCamera, .builtInWideAngleCamera], mediaType: AVMediaType.video, position: self).devices.filter { $0.position == self }
+	func device(using priorities: [AVCaptureDevice.DeviceType] = [ .builtInUltraWideCamera, .builtInWideAngleCamera, .builtInTelephotoCamera ]) -> AVCaptureDevice? {
+		let devices = AVCaptureDevice.DiscoverySession(deviceTypes: AVCaptureDevice.DeviceType.allTypes, mediaType: AVMediaType.video, position: self).devices.filter { $0.position == self }
 		
 		for type in priorities {
 			if let device = devices.first(where: { $0.deviceType == type }) {

@@ -31,8 +31,14 @@ extension HeartRateReader {
 		private var freq: Float = 0.0
 		private var average: Float = 0.0
 		private var wasDown = false
+		private var recentPulses: [PulseRecord] = []
 		
 		private var periodStart: Double = 0.0
+		
+		struct PulseRecord {
+			let rate: Float
+			let date = Date()
+		}
 		
 		init(publisher: ObservableObjectPublisher) {
 			// set everything to invalid
@@ -80,8 +86,10 @@ extension HeartRateReader {
 	let averageDown: Double = total/count
 	
 	if newVal < -0.5 * averageDown {
-		if !wasDown {
-			NSLog("Pulse")
+		if !wasDown, let avg = getAverage(smoothed: false) {
+			if let date = recentPulses.first?.date, abs(date.timeIntervalSinceNow) > 30 { recentPulses.remove(at: 0) }
+			if recentPulses.count > 20 { recentPulses.remove(at: 0) }
+			recentPulses.append(PulseRecord(rate: avg))
 			DispatchQueue.main.async { self.publisher.send() }
 		}
 		 wasDown = true
@@ -110,7 +118,11 @@ extension HeartRateReader {
 	return 0
 }
 		
-		func getAverage() -> Float? {
+		func getAverage(smoothed: Bool = true) -> Float? {
+			if smoothed, !recentPulses.isEmpty {
+				let raw = recentPulses.map { $0.rate }
+				return raw.reduce(0, +) / Float(raw.count)
+			}
 			let time = CACurrentMediaTime()
 			var total: Double = 0
 			var count: Double = 0
