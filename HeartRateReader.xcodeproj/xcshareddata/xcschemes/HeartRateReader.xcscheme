@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B555B3A525F3A39C00D57F16"
-               BuildableName = "HeartRate.app"
+               BuildableName = "HeartRateReader.app"
                BlueprintName = "HeartRateReader"
                ReferencedContainer = "container:HeartRateReader.xcodeproj">
             </BuildableReference>
@@ -65,7 +65,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B555B3A525F3A39C00D57F16"
-            BuildableName = "HeartRate.app"
+            BuildableName = "HeartRateReader.app"
             BlueprintName = "HeartRateReader"
             ReferencedContainer = "container:HeartRateReader.xcodeproj">
          </BuildableReference>
@@ -82,7 +82,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B555B3A525F3A39C00D57F16"
-            BuildableName = "HeartRate.app"
+            BuildableName = "HeartRateReader.app"
             BlueprintName = "HeartRateReader"
             ReferencedContainer = "container:HeartRateReader.xcodeproj">
          </BuildableReference>

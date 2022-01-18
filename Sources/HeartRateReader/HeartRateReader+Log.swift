@@ -7,6 +7,7 @@
 
 import Foundation
 import QuartzCore
+import Combine
 
 private let averageSize = 20
 private let maxPeriodsToStore = 20
@@ -17,6 +18,7 @@ private let invalidEntry: Double = -100
 
 extension HeartRateReader {
 	class PulseDetector {
+		private var publisher: ObservableObjectPublisher
 		private var upVals = [Double](repeating: 0.0, count: averageSize)
 		private var downVals = [Double](repeating: 0.0, count: averageSize)
 		private var upValIndex = 0
@@ -32,8 +34,9 @@ extension HeartRateReader {
 		
 		private var periodStart: Double = 0.0
 		
-		init() {
+		init(publisher: ObservableObjectPublisher) {
 			// set everything to invalid
+			self.publisher = publisher
 			reset()
 		}
 		

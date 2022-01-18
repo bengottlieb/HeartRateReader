@@ -28,13 +28,13 @@ public class HeartRateReader: NSObject, ObservableObject {
 
 	var validFrameCounter = 0
 	let hueFilter = Filter()
-	var rates = PulseDetector()
+	lazy var rates = PulseDetector(publisher: objectWillChange)
 	
 	private override init() { super.init() }
 	
 	public func start() throws {
 		if videoDevice == nil {
-			rates = PulseDetector()
+			rates = PulseDetector(publisher: objectWillChange)
 			guard let device = Self.position.device() else { throw HeartRateError.noCameraFound }
 			
 			videoDevice = device

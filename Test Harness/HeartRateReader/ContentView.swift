@@ -21,8 +21,9 @@ struct ContentView: View {
 				 }
 				 HeartRateCameraView()
 					 .frame(width: 200, height: 200)
-					 .clipShape(Circle())
+					 .mask(Image(systemName: "suit.heart.fill").font(.system(size: 100)))
 			 }
+			 
 			 Button(reader.isRunning ? "Stop" : "Start") {
 				 if reader.isRunning {
 					 reader.stop()
